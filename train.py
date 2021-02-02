@@ -21,7 +21,7 @@ no_grad = [
     'cnn.2.bias'
     ]
 
-using_cuda = Trues
+using_cuda = True
 epoch = 50
 epoch_change = 20
 lr_front = 0.001

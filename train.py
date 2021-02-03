@@ -74,6 +74,7 @@ def train():
         start = time.time()
         for img, tag, filename in train_loader:
             # img_pil = Image.open(filename[0])
+            train_logger.info("this is {} epoch {} iteration".format(i, iteration))
             tensor_img = img.permute((0, 3, 1, 2))
             img = torch.squeeze(img, 0)
             if using_cuda:
@@ -102,8 +103,7 @@ def train():
                 train_logger.warn("the error is %s" %e)
                 train_logger.warn("warning: img %s raise error" % filename)
                 iteration += 1
-                exit()
-                # continue
+                continue
             
             if len(vertical_reg) == 0 or len(positive) == 0 or len(side_refinement_reg) == 0:
                 iteration += 1
@@ -122,7 +122,7 @@ def train():
             if iteration % display_iter == 0:
                 end = time.time()
                 total_time = start - end
-                print('Epoch: {2}/{3}, Iteration: {0}/{1}, loss: {4}, cls_loss: {5}, v_reg_loss: {6}, o_reg_loss: {7}, {8}'.
+                train_logger.info('Epoch: {2}/{3}, Iteration: {0}/{1}, loss: {4}, cls_loss: {5}, v_reg_loss: {6}, o_reg_loss: {7}, {8}'.
                       format(iteration, total_iter, i, epoch, total_loss / display_iter, total_cls_loss / display_iter,
                              total_v_reg_loss / display_iter, total_o_reg_loss / display_iter, filename))
 
@@ -143,7 +143,7 @@ def train():
                 start_time = time.time()
                 test_loss_list.append(val_loss)
         
-        print('Model saved at ./output/ctpn-{0}-end.model'.format(i))
+        train_logger.info('Model saved at ./output/ctpn-{0}-end.model'.format(i))
         torch.save(net.state_dict(), os.path.join(MODEL_SAVE_PATH, 'ctpn-msra_ali-{0}-end.model'.format(i)))
 
 

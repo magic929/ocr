@@ -22,14 +22,13 @@ no_grad = [
     ]
 
 using_cuda = True
-epoch = 50
+epoch = 100
 epoch_change = 20
 lr_front = 0.001
 lr_behind = 0.0001
 display_iter = 1400
 val_iter = 2900
-save_epchoe = 10
-MODEL_SAVE_PATH = './model'
+MODEL_SAVE_PATH = './output'
 val_batch_size = 20
 
 
@@ -78,7 +77,7 @@ def train():
             tensor_img = img.permute((0, 3, 1, 2))
             img = torch.squeeze(img, 0)
             if using_cuda:
-                tensor_img = tensor_img.to(dtype=torch.float)
+                tensor_img = tensor_img.to(dtype=torch.float).cuda()
             else:
                 tensor_img = tensor_img.to(dtype=torch.float)
             
@@ -143,10 +142,6 @@ def train():
                 net.train()
                 start_time = time.time()
                 test_loss_list.append(val_loss)
-                
-            if i % save_epchoe == 0:
-                print('Model saved at ./output/ctpn-{0}-{1}.mode'.format(i, iteration))
-                torch.save(net.state_dict(), os.path.join(MODEL_SAVE_PATH, 'ctpn-msra_ali-{0}-{1}.model'.format(i, iteration)))
         
         print('Model saved at ./output/ctpn-{0}-end.model'.format(i))
         torch.save(net.state_dict(), os.path.join(MODEL_SAVE_PATH, 'ctpn-msra_ali-{0}-end.model'.format(i)))
